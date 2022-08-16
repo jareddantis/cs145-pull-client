@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import IntFlag
-from string import ascii_lowercase
+from string import ascii_lowercase, ascii_uppercase
 from sympy import factorint
 
 
@@ -45,8 +45,9 @@ class Packet:
 class DataPacket:
     txn_id: str
     uin: int
-    uin_ans: int
+    answer: int
     data: str
+    last: bool
 
 
 # Packet decoder
@@ -66,30 +67,43 @@ def decode_data_packet(packet: str) -> DataPacket:
             raise ValueError('No DATA substring found')
 
         # Extract data
-        encrypted_data = packet[data_start + 4:].lower()
+        encrypted_data = packet[data_start + 4:]
 
-        # Extract challenge
-        challenge = int(packet[24:data_start])
+        # Check if '<END>' is present
+        end_msg_start = encrypted_data.find('<END>')
+        last = False
+        answer = 0
+        if end_msg_start != -1:
+            data = encrypted_data[:end_msg_start]
+            last = True
+        else:
+            # Extract challenge
+            challenge = int(packet[24:data_start])
 
-        # Factorize challenge question
-        factors = factorint(challenge).keys()
+            # Factorize challenge question
+            factors = factorint(challenge).keys()
 
-        # Decode data using Caesar cipher with shift equal to the smallest factor
-        data = ''
-        key = min(factors)
-        for c in encrypted_data:
-            if c in ascii_lowercase:
-                pos = ascii_lowercase.index(c)
-                data += ascii_lowercase[(pos - key) % 26]
-            else:
-                data += c
+            # Decode data using Caesar cipher with shift equal to the smallest factor
+            key = min(factors)
+            answer = max(factors)
+            data = ''
+            for c in encrypted_data:
+                if c in ascii_lowercase:
+                    pos = ascii_lowercase.index(c)
+                    data += ascii_lowercase[(pos - key) % 26]
+                elif c in ascii_uppercase:
+                    pos = ascii_uppercase.index(c)
+                    data += ascii_uppercase[(pos - key) % 26]
+                else:
+                    data += c
         
         # Return decoded data packet
         return DataPacket(
             txn_id=txn_id,
             uin=uin,
-            uin_ans=max(factors),
-            data=data
+            answer=answer,
+            data=data,
+            last=last
         )
     except Exception as e:
         raise ValueError('Could not decode packet: {}'.format(e)) from e
