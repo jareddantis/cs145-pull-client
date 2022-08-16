@@ -13,30 +13,6 @@ ARG_DEFAULTS = {
 # Base project directory
 PROJECT_ROOT = dirname(abspath(__file__))
 
-# Probe packet length
-PROBE_LEN = 1
-
-# Threshold for small payload lengths.
-# Payloads with a total size below this threshold
-# will be sent with AIMD disabled.
-SMALL_PAYLOAD_THRESHOLD = 300
-
-# Maximum additive increase total
-ADD_INC_MAX = 3
-
-# Multiplicative decrease ratio
-MULT_DEC_RATIO = 0.8
-
-# Maximum ACK retries
-# Never set this to below 0, as it will cause the program to never wait for ACKs
-MAX_ACK_RETRIES = 1
-
-# Network stability threshold in msecs.
-MAX_NETWORK_RTT = 250
-
-# Target transaction duration in seconds
-TARGET_DURATION = 95
-
 # ANSI terminal colors (for logging)
 ANSI_BLUE = '\x1b[36;20m'
 ANSI_GREEN = '\x1b[32;20m'
