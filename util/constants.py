@@ -1,4 +1,3 @@
-from enum import IntFlag
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 from os.path import abspath, dirname
 
@@ -10,13 +9,6 @@ ARG_DEFAULTS = {
     'client_port': 6688,
     'client_id': 'b2f4c0d4'
 }
-
-# Packet types
-class PacketType(IntFlag):
-    SUBMIT = 1
-    ACK = 2
-    PULL = 4
-    INIT = 8
 
 # Base project directory
 PROJECT_ROOT = dirname(abspath(__file__))
