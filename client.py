@@ -1,5 +1,6 @@
 import argparse
 import socket
+from math import ceil
 from time import sleep, time
 from typing import Optional, Tuple, Union, TYPE_CHECKING
 from util.constants import ARG_DEFAULTS, DEBUG, WARNING
@@ -164,6 +165,11 @@ class PullClient:
         fixed_size = False
         final_data = ''
         while True:
+            # Check if there's still time
+            if time() > self.txn_expiry:
+                self.logger.critical('Transaction expired!')
+                break
+            
             self.logger.info('Sending PULL packet with pull={0} size={1}'.format(pull, size))
 
             # Send PULL packet
@@ -208,7 +214,7 @@ class PullClient:
                 size += inc_delta
 
                 # Update timeout
-                self._timeout = rtt + 1.5
+                self._timeout = ceil(rtt) + 2
         
         self.logger.success('Transaction {0} completed in {1:.2f} sec'.format(self.txn_id, time() - self.txn_start))
 
