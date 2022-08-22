@@ -3,40 +3,25 @@
 in partial fulfillment of the requirements of the CS 145 course
 for the second semester of Academic Year 2021-2022
 
-# About
+## About
 
 This is an implementation of a client for the pull-centric UDP-based protocol for CS 145, written in Python 3.
 
-# Requirements
+## Requirements
 
 The program was developed on Python 3.8.10, which is the version of Python 3
 that comes with new Ubuntu instances on AWS. It should work on Python 3.8+ given
-that the requirements are also installed.
+that the requirements are also installed (see [Installation](#installation)).
 
-Make sure you have a compatible version of Python installed. Create a virtual
-environment by running
+## Installation
 
-```bash
-python3 -m venv .venv
-```
-
-Then activate the virtual environment by running
+The program uses the [SymPy](https://sympy.org) for prime factorization. Install it by running
 
 ```bash
-# Windows
-.venv\Scripts\activate
-
-# Linux / macOS
-source .venv/bin/activate
+pip3 install --user sympy
 ```
 
-Then install the requirements by running
-
-```bash
-pip install -r requirements.txt
-```
-
-# Running
+## Running
 
 The program accepts 5 optional flags, 4 of which are mandated by the project specifications. They are as follows:
 
